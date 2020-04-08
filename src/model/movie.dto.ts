@@ -1,4 +1,4 @@
-export class ModelEntityDto {
+export class MovieDto {
   id: number;
   title: string;
   plot: string;
