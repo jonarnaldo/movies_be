@@ -13,8 +13,14 @@ export class MovieService {
     private http: HttpService,
   ) { }
 
-  async findAll(search: { query: string }) {
-    return search;;
+  async findPopular(): Promise<any> {
+    return this.http
+      .get(`${this.baseURL}movie/popular/`, {
+        params: {
+          api_key: process.env.API_KEY,
+        }
+      })
+      .pipe(map(response => response.data));
   }
 
   async findOne(search: { query: string }): Promise<any> {
@@ -30,4 +36,15 @@ export class MovieService {
       })
       .pipe(map(response => response.data));
   }
+
+  async getDetail(movieId: string): Promise<any> {
+    return this.http
+      .get(`https://api.themoviedb.org/3/movie/${movieId}`, {
+        params: {
+          api_key: process.env.API_KEY,
+          language: this.defaultLanguage,
+        }
+      })
+      .pipe(map(response => response.data));
+  }  
 }
