@@ -6,8 +6,10 @@ dotenv.config();
 
 @Injectable()
 export class MovieService {
-  private readonly baseURL = 'https://api.themoviedb.org/3/';
-  private readonly defaultLanguage = 'en-US'
+  private readonly defaultLanguage = 'en-US';
+  private params = {
+    api_key: process.env.API_KEY,
+  };
   
   constructor(
     private http: HttpService,
@@ -15,19 +17,15 @@ export class MovieService {
 
   async findPopular(): Promise<any> {
     return this.http
-      .get(`${this.baseURL}movie/popular/`, {
-        params: {
-          api_key: process.env.API_KEY,
-        }
-      })
+      .get(`${process.env.API_URL}movie/popular/`, { params: this.params })
       .pipe(map(response => response.data));
   }
 
   async findOne(search: { query: string }): Promise<any> {
     return this.http
-      .get(`${this.baseURL}search/movie/`, {
+      .get(`${process.env.API_URL}search/movie/`, {
         params: {
-          api_key: process.env.API_KEY,
+          ...this.params,
           language: this.defaultLanguage,
           query: search.query,
           page: 1,
@@ -39,9 +37,9 @@ export class MovieService {
 
   async getDetail(movieId: string): Promise<any> {
     return this.http
-      .get(`https://api.themoviedb.org/3/movie/${movieId}`, {
+      .get(`${process.env.API_URL}movie/${movieId}`, {
         params: {
-          api_key: process.env.API_KEY,
+          ...this.params,
           language: this.defaultLanguage,
         }
       })
