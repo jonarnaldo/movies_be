@@ -2,7 +2,7 @@ import { CacheModule, Module, HttpModule, CacheInterceptor } from '@nestjs/commo
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NestApplication } from '@nestjs/core';
-import { MoviewController } from './model/movie.controller';
+import { MovieController } from './model/movie.controller';
 import { MovieModule } from './model/movie.module';
 import { MovieService } from './model/movie.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
@@ -18,7 +18,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
   ],
   controllers: [
     AppController,
-    MoviewController
+    MovieController
   ],
   providers: [
     AppService, 

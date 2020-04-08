@@ -10,7 +10,7 @@ import { MovieService } from './movie.service';
 
 @Controller('movies')
 @UseInterceptors(CacheInterceptor)
-export class MoviewController {
+export class MovieController {
   constructor(private movieService: MovieService) {}
 
   @Get('popular')

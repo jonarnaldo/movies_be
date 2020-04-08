@@ -1,5 +1,5 @@
 import { CacheModule, Module, HttpModule } from '@nestjs/common';
-import { MoviewController } from './movie.controller';
+import { MovieController } from './movie.controller';
 import { MovieService } from './movie.service';
 
 @Module({
@@ -7,7 +7,7 @@ import { MovieService } from './movie.service';
     CacheModule.register(),
     HttpModule,
   ],
-  controllers: [MoviewController],
+  controllers: [MovieController],
   providers: [MovieService],
 })
 export class MovieModule {}
