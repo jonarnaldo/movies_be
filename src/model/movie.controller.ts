@@ -1,7 +1,15 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Param, 
+  Query,
+  CacheInterceptor,
+  UseInterceptors 
+} from '@nestjs/common';
 import { MovieService } from './movie.service';
 
 @Controller('movies')
+@UseInterceptors(CacheInterceptor)
 export class MoviewController {
   constructor(private movieService: MovieService) {}
 
