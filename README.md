@@ -5,6 +5,7 @@ $ npm install
 ```
 
 ## Running the app
+update the .env file with a themoviedb api key
 
 ```bash
 $ npm run start:dev
