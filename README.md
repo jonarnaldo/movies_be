@@ -23,3 +23,6 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Notes
+added some basic unit and e2e tests. follow Test instructions above to run both
