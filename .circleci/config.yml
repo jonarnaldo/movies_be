@@ -1,17 +1,50 @@
-parameters:
-  app-name: 'movie_be'
-  app-arg: ''
-  app-type: 'web'
-steps:
-  - run:
-      name: Login into Heroku Docker Repository
-      command: >
-        docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
-  - run:
-      name: Deploy Heroku Docker Container
-      command: >
-        heroku container:push << parameters.app-type >> -a <<
-        parameters.app-name >> --arg << parameters.app-arg >>
+# This code is licensed from CircleCI to the user under the MIT license. See
+# https://circleci.com/orbs/registry/licensing for details.
+# This code is licensed from CircleCI to the user under the MIT license. See
+# https://circleci.com/orbs/registry/licensing for details.
+version: 2.1
+description: "Deploying Node.js Docker to Heroku"
 
-        heroku container:release << parameters.app-type >> -a <<
-        parameters.app-name >>
+executors:
+  node:
+    docker:
+      - image: circleci/node:12
+
+commands:
+  setup:
+    steps:
+      - checkout
+      - setup_remote_docker
+  install_dependencies:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies- # fallback to using the latest cache if no exact match is found
+      - run:
+          name: "Install Heroku CLI, if necessary"
+          command: |
+            if [[ $(command -v heroku) == "" ]]; then
+              curl https://cli-assets.heroku.com/install.sh | sh
+            else
+              echo "Heroku is already installed. No operation was performed."
+            fi
+            
+  docker-build-release:
+    parameters:
+      app-name: 'movie_be'
+      app-arg: ''
+      app-type: 'web'
+    steps:
+      - run:
+          name: Login into Heroku Docker Repository
+          command: >
+            docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+      - run:
+          name: Deploy Heroku Docker Container
+          command: >
+            heroku container:push << parameters.app-type >> -a <<
+            parameters.app-name >> --arg << parameters.app-arg >>
+
+            heroku container:release << parameters.app-type >> -a <<
+            parameters.app-name >>
