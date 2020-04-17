@@ -1,56 +1,24 @@
-# This code is licensed from CircleCI to the user under the MIT license. See
-# https://circleci.com/orbs/registry/licensing for details.
-# This code is licensed from CircleCI to the user under the MIT license. See
-# https://circleci.com/orbs/registry/licensing for details.
-version: 2.1
-description: "Deploying Node.js Docker to Heroku"
-
-executors:
-  node:
-    docker:
-      - image: circleci/node:12
-
-commands:
-  setup:
+version: 2
+  jobs:
+    build:
+      machine: true
     steps:
       - checkout
-      - setup_remote_docker
-  install_dependencies:
-    steps:
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies- # fallback to using the latest cache if no exact match is found
+      # build image
+      - run: |
+        docker info
+        docker build -t jonarnaldo:movies_be
+      # deploy the image
+      - run: |
+        docker login -username=$HEROKU_USERNAME --password=$HEROKU_API_KEY registry.heroku.com
+        docker tag jonarnaldo:movies_be registry.heroku.com/$HEROKU_APP_NAME/web
+        docker push registry.heroku.com/$HEROKU_APP_NAME/web
       - run:
-          name: "Install Heroku CLI, if necessary"
-          command: |
-            if [[ $(command -v heroku) == "" ]]; then
-              curl https://cli-assets.heroku.com/install.sh | sh
-            else
-              echo "Heroku is already installed. No operation was performed."
-            fi
-
-  docker-build-release:
-    parameters:
-      app-name:
-        description: "The Heroku app name to which the application should be deployed"
-        type: string
-        default: movie_be
-      app-arg:
-        description: "The Heroku Dockerfile args"
-        type: string
-        default: 
-      app-type:
-        description: "The Heroku app type (web or worker) of the application to be deployed"
-        type: string
-        default: web
-    steps:
+        name: Setup Heroku
+        command: |
+          chmod +x .circleci/setup-heroku.sh
+          .circleci/setup-heroku.sh
       - run:
-          name: Login into Heroku Docker Repository
-          command: |
-            docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
-      - run:
-          name: Deploy Heroku Docker Container
-          command: |
-            heroku container:push << parameters.app-type >> -a << parameters.app-name >> --arg << parameters.app-arg >>
-            heroku container:release << parameters.app-type >> -a << parameters.app-name >>
+        name: Deploy to Heroku
+        command: |
+          heroku container:release web --app $HEROKU_APP_NAME
