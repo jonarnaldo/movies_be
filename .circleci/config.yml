@@ -32,9 +32,18 @@ commands:
 
   docker-build-release:
     parameters:
-      app-name: "movie_be"
-      app-arg: ""
-      app-type: "web"
+      app-name:
+        description: "The Heroku app name to which the application should be deployed"
+        type: string
+        default: movie_be
+      app-arg:
+        description: "The Heroku Dockerfile args"
+        type: string
+        default: 
+      app-type:
+        description: "The Heroku app type (web or worker) of the application to be deployed"
+        type: string
+        default: web
     steps:
       - run:
           name: Login into Heroku Docker Repository
