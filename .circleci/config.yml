@@ -1,11 +1,17 @@
-version: 2.1
-jobs:
-  build:
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run:
-          name: The First Step
-          command: |
-            echo 'Hello World!'
-            echo 'This is the delivery pipeline'
+parameters:
+  app-name: 'movie_be'
+  app-arg: ''
+  app-type: 'web'
+steps:
+  - run:
+      name: Login into Heroku Docker Repository
+      command: >
+        docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+  - run:
+      name: Deploy Heroku Docker Container
+      command: >
+        heroku container:push << parameters.app-type >> -a <<
+        parameters.app-name >> --arg << parameters.app-arg >>
+
+        heroku container:release << parameters.app-type >> -a <<
+        parameters.app-name >>
