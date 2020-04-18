@@ -4,12 +4,14 @@ jobs:
     machine: true
   steps:
     - checkout
-    # build image
-    - run: |
+    - run: 
+      name: Build Image
+      command: |
       docker info
       docker build -t jonarnaldo:movies_be
-    # deploy the image
-    - run: |
+    - run:
+      name: Add Image to docker heroku repository
+      command: |
       docker login -username=$HEROKU_USERNAME --password=$HEROKU_API_KEY registry.heroku.com
       docker tag jonarnaldo:movies_be registry.heroku.com/$HEROKU_APP_NAME/web
       docker push registry.heroku.com/$HEROKU_APP_NAME/web
