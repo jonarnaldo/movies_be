@@ -8,7 +8,7 @@ jobs:
           name: Build Image
           command: |
             docker info
-            docker build -t jonarnaldo:movies_be
+            docker build -t jonarnaldo:movies_be .
       - run:
           name: Add Image to docker heroku repository
           command: |
